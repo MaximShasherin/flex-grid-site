@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Flexbox & Grid | Современная вёрстка CSS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #fafaf9;
+            color: #1c1c1e;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        /* светлый фон, тёмный текст, чистые оттенки */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 28px;
+        }
+
+        /* ========== HEADER ========== */
+        header {
+            background: white;
+            border-bottom: 1px solid #e7e5e4;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(2px);
+            background-color: rgba(255, 255, 255, 0.96);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 18px 0;
+            gap: 16px;
+        }
+
+        .logo a {
+            font-size: 1.55rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.3px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 22px;
+            flex-wrap: wrap;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #2d3e50;
+            transition: all 0.2s ease;
+            padding: 6px 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+        }
+
+        /* активная страница (подсветка) */
+        .nav-links a.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+            font-weight: 600;
+        }
+
+        /* главная сетка страниц (все страницы — блоки) */
+        .page {
+            display: none;
+            animation: fade 0.25s ease;
+        }
+
+        .page.active-page {
+            display: block;
+        }
+
+        @keyframes fade {
+            from { opacity: 0; transform: translateY(6px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* hero & typography */
+        h1 {
+            font-size: 2.4rem;
+            margin: 1.2rem 0 0.75rem 0;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(145deg, #1e293b, #2d3e50);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        h2 {
+            font-size: 1.8rem;
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 600;
+            color: #0f172a;
+            border-left: 5px solid #3b82f6;
+            padding-left: 18px;
+        }
+        h3 {
+            font-size: 1.3rem;
+            margin: 1rem 0 0.5rem;
+            font-weight: 600;
+            color: #2c3e66;
+        }
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.03);
+            border: 1px solid #edede9;
+        }
+        pre {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 20px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            border: 1px solid #e2e8f0;
+        }
+        code {
+            font-family: monospace;
+            background: #eef2ff;
+            padding: 0.2rem 0.4rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+        /* примеры флекс и грид */
+        .demo-flex-nav {
+            display: flex;
+            justify-content: space-around;
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 60px;
+            list-style: none;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+            gap: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .demo-flex-nav li {
+            background: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: default;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        /* hover-анимация: меняется цвет и небольшой размер */
+        .demo-flex-nav li:hover {
+            background-color: #3b82f6;
+            color: white;
+            transform: scale(1.05);
+            transition: 0.2s ease;
+        }
+
+        /* сетка 3 колонки одинаковой ширины (задача Grid) */
+        .grid-three-equal {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 1.5rem 0;
+        }
+        .grid-three-equal > div {
+            background: #fef9e3;
+            border-radius: 24px;
+            padding: 1.4rem;
+            text-align: center;
+            font-weight: 500;
+            border: 1px solid #ffedd5;
+            transition: all 0.2s;
+        }
+        .grid-three-equal > div:hover {
+            background: #ffedd5;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        /* галерея hover-анимация (на грид странице: пример с карточками) */
+        .hover-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        .hover-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.6rem;
+            text-align: center;
+            width: 180px;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+            border: 1px solid #e9e9ef;
+        }
+        .hover-card:hover {
+            transform: scale(1.05) translateY(-6px);
+            background: #eef2ff;
+            border-color: #3b82f6;
+            color: #1e40af;
+            cursor: pointer;
+        }
+        .hover-card span {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* Таблица сравнения */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 1.8rem 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .compare-table th, .compare-table td {
+            border: 1px solid #e4e4e7;
+            padding: 14px 18px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .compare-table th {
+            background: #f1f5f9;
+            font-weight: 600;
+        }
+
+        /* кнопка наверх */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1e293b;
+            color: white;
+            border: none;
+            border-radius: 60px;
+            padding: 12px 18px;
+            font-size: 1rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 200;
+            font-weight: 500;
+        }
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-top:hover {
+            background: #3b82f6;
+            transform: translateY(-3px);
+        }
+
+        footer {
+            margin-top: 4rem;
+            background: #ffffffdd;
+            border-top: 1px solid #e2e2e2;
+            padding: 2rem 0 2rem;
+            text-align: center;
+            color: #4b5563;
+            font-size: 0.9rem;
+        }
+
+        .counter-box {
+            background: #f1f5f9;
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 760px) {
+            .header-inner { flex-direction: column; }
+            .nav-links { gap: 18px; justify-content: center; }
+            h1 { font-size: 1.9rem; }
+        }
+        .example-img-note {
+            background: #eef2ff;
+            border-radius: 18px;
+            padding: 12px;
+            font-style: italic;
+            margin: 12px 0;
+            font-size: 0.9rem;
+            border-left: 4px solid #3b82f6;
+        }
+        .flex-demo-container {
+            display: flex;
+            background: #f9f9fb;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 1rem 0;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .flex-demo-item {
+            background: #cbd5e1;
+            padding: 12px;
+            border-radius: 16px;
+            flex: 1;
+            text-align: center;
+            min-width: 80px;
+        }
+        /* стили для страницы об авторе */
+        .author-card {
+            background: white;
+            border-radius: 32px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            border: 1px solid #eef2ff;
+        }
+        .author-name {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(120deg, #1e293b, #3b82f6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .author-email {
+            font-size: 1.2rem;
+            color: #334155;
+            background: #f1f5f9;
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 60px;
+            margin-top: 16px;
+            font-family: monospace;
+        }
+        .author-badge {
+            margin-top: 24px;
+            font-size: 1rem;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container header-inner">
+        <div class="logo"><a href="#">📐 Flex·Grid</a></div>
+        <ul class="nav-links">
+            <li><a href="#" data-page="home" class="active">Главная</a></li>
+            <li><a href="#" data-page="flex">Flexbox</a></li>
+            <li><a href="#" data-page="grid">Grid</a></li>
+            <li><a href="#" data-page="compare">Сравнение</a></li>
+            <li><a href="#" data-page="examples">Примеры+задачи</a></li>
+            <li><a href="#" data-page="author">Об авторе</a></li>
+        </ul>
+    </div>
+</header>
+
+<main class="container">
+    <!-- ========== ГЛАВНАЯ ========== -->
+    <div id="home-page" class="page active-page">
+        <h1>Flexbox и Grid — архитектура современного CSS</h1>
+        <div class="card">
+            <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">✨ Две главные системы макетирования, которые заменили устаревшие приёмы (float, таблицы). <strong>Flexbox</strong> управляет выравниванием в одной оси, а <strong>Grid</strong> даёт полный контроль над строками и столбцами одновременно.</p>
+        </div>
+        <h2>Зачем они нужны?</h2>
+        <p>Раньше разработчикам приходилось использовать хаки: <code>float</code>, <code>clearfix</code>, относительное позиционирование. Сегодня <strong>Flexbox</strong> и <strong>Grid</strong> позволяют создавать адаптивные, гибкие и сложные макеты всего несколькими строками CSS. Они идеально подходят для отзывчивого дизайна, центрирования, умного распределения пространства и построения сеток новостных порталов, интернет-магазинов и дашбордов.</p>
+        <div class="flex-demo-container" style="justify-content: space-between; background:#f0f4fe;">
+            <div class="flex-demo-item">Гибкость</div>
+            <div class="flex-demo-item">Адаптивность</div>
+            <div class="flex-demo-item">Чистый код</div>
+        </div>
+        <p>На этом сайте мы детально разберём каждую технологию, выполним учебные задачи и увидим разницу.</p>
+    </div>
+
+    <!-- ========== FLEXBOX ========== -->
+    <div id="flex-page" class="page">
+        <h1>Flexbox: одномерный layout</h1>
+        <p><strong>Flexible Box Layout</strong> — инструмент для распределения элементов вдоль главной оси (row | column). Идеально для меню, карточек, выравнивания по центру.</p>
+        <h2>Основные свойства контейнера</h2>
+        <ul style="margin-left: 1.5rem;">
+            <li><code>display: flex;</code> — активирует flex-контекст.</li>
+            <li><code>flex-direction: row | column | row-reverse | column-reverse</code> — направление оси.</li>
+            <li><code>justify-content</code> — выравнивание по главной оси (flex-start, center, space-between...).</li>
+            <li><code>align-items</code> — выравнивание по поперечной оси (stretch, center, flex-start...).</li>
+        </ul>
+        <h3>Свойства элементов: flex</h3>
+        <p>Сокращённое свойство <code>flex: grow shrink basis;</code> позволяет управлять гибкостью. Например <code>flex: 1;</code> заставит элемент занимать всё доступное место.</p>
+        <div class="card">
+            <h3>📌 Пример кода (горизонтальное меню с равными отступами)</h3>
+            <pre><code>&lt;ul class="flex-nav"&gt;
+  &lt;li&gt;Главная&lt;/li&gt;
+  &lt;li&gt;О нас&lt;/li&gt;
+  &lt;li&gt;Услуги&lt;/li&gt;
+  &lt;li&gt;Контакты&lt;/li&gt;
+&lt;/ul&gt;
+
+.flex-nav {
+  display: flex;
+  justify-content: space-around;
+  background: #f3f4f6;
+  padding: 1rem;
+}</code></pre>
+            <div class="example-img-note">🎯 элементы равномерно распределены, при наведении — hover-эффект (цвет + масштаб).</div>
+            <ul class="demo-flex-nav">
+                <li>Главная</li>
+                <li>Новости</li>
+                <li>Проекты</li>
+                <li>Контакты</li>
+            </ul>
+        </div>
+        <h3>Центрирование через Flexbox</h3>
+        <pre><code>.parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}</code></pre>
+        <p>Благодаря flex-контейнеру можно идеально отцентрировать любой элемент по вертикали и горизонтали.</p>
+    </div>
+
+    <!-- ========== GRID страница + галерея с hover-анимацией ========== -->
+    <div id="grid-page" class="page">
+        <h1>CSS Grid Layout — двумерное могущество</h1>
+        <p>Grid работает одновременно со строками и столбцами, превращая контейнер в полноценную сетку. Основные понятия: <strong>линии (grid lines)</strong>, <strong>треки (track)</strong>, <strong>ячейки (cell)</strong> и <strong>области (grid area)</strong>.</p>
+        <h2>Ключевые свойства контейнера</h2>
+        <ul>
+            <li><code>display: grid;</code> — включает Grid.</li>
+            <li><code>grid-template-columns: 1fr 2fr 1fr;</code> — задаёт столбцы (fr — доля свободного места).</li>
+            <li><code>grid-template-rows: auto 200px;</code> — определяет строки.</li>
+            <li><code>gap: 16px;</code> — расстояние между треками (современный аналог grid-gap).</li>
+        </ul>
+        <div class="card">
+            <h3>📐 Пример кода: адаптивная 3x2 сетка с фиксированной и резиновой колонкой</h3>
+            <pre><code>.grid-demo {
+  display: grid;
+  grid-template-columns: 200px 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 20px;
+}</code></pre>
+            <div style="display: grid; grid-template-columns: 200px 1fr 1fr; gap: 16px; background: #fefce8; padding: 18px; border-radius: 28px; margin-top: 12px;">
+                <div style="background:#d9f99d; padding: 1rem; border-radius: 20px;">Фикс 200px</div>
+                <div style="background:#fed7aa; padding: 1rem; border-radius: 20px;">Адаптивная 1fr</div>
+                <div style="background:#bfdbfe; padding: 1rem; border-radius: 20px;">Адаптивная 1fr</div>
+                <div style="background:#fbcfe8; padding: 1rem; border-radius: 20px;">Вторая строка (auto)</div>
+                <div style="background:#c4b5fd; padding: 1rem; border-radius: 20px;">Контент растягивается</div>
+                <div style="background:#a7f3d0; padding: 1rem; border-radius: 20px;">Гибкая сетка</div>
+            </div>
+            <p class="example-img-note">✅ первая колонка фиксированная 200px, другие занимают остаток (fr). Это решение для сложных интерфейсов.</p>
+        </div>
+        
+        <h2>🎨 Галерея с hover-анимацией (меняем цвет / размер)</h2>
+        <p>Наведи на любой элемент — увеличивается масштаб, меняется фон и цвет, демонстрируя живость интерфейса.</p>
+        <div class="hover-gallery">
+            <div class="hover-card"><span>🧩</span> Flexbox<br>однонаправленный</div>
+            <div class="hover-card"><span>🗂️</span> Grid Layout<br>двумерный</div>
+            <div class="hover-card"><span>⚡</span> Адаптивность<br>без медиа</div>
+            <div class="hover-card"><span>🎯</span> Простота<br>макетирования</div>
+        </div>
+        <p><em>При hover: увеличение +5%, мягкая тень, цвет фона становится голубоватым — так работают интерактивные элементы на современных сайтах.</em></p>
+    </div>
+
+    <!-- ========== СРАВНЕНИЕ ========== -->
+    <div id="compare-page" class="page">
+        <h1>Сравнение Flexbox и Grid</h1>
+        <table class="compare-table">
+            <thead>
+                <tr><th>Характеристика</th><th>Flexbox</th><th>Grid</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Измерение</td><td>Одномерная (строка ИЛИ колонка)</td><td>Двумерная (строки И столбцы одновременно)</td></tr>
+                <tr><td>Основная задача</td><td>Выравнивание элементов в одном направлении, распределение пространства, навигация, карточки.</td><td>Создание сложных макетов, цельных сеток, расположение элементов в двух осях.</td></tr>
+                <tr><td>Управление содержимым</td><td>Ориентация на контент (размер элементов влияет на сетку)</td><td>Ориентация на контейнер (задаём структуру явно)</td></tr>
+                <tr><td>Когда использовать</td><td>Меню, центрирование, небольшие UI-компоненты, выравнивание кнопок</td><td>Общая структура страницы, сложные галереи, панели, дашборды, новостные сетки</td></tr>
+                <tr><td>Свойства</td><td>justify-content, align-items, flex-grow, order</td><td>grid-template-areas, grid-template-columns/rows, gap, justify-items</td></tr>
+            </tbody>
+        </table>
+        <div class="card">
+            <p>🔍 <strong>Рекомендация:</strong> Используйте <strong>Flexbox</strong> для мелких интерфейсных элементов и внутреннего выравнивания. Применяйте <strong>Grid</strong> для каркаса страницы, чтобы полностью контролировать расположение блоков. Они отлично сочетаются!</p>
+        </div>
+    </div>
+
+    <!-- ========== ПРИМЕРЫ И ЗАДАЧИ (из презентации) ========== -->
+    <div id="examples-page" class="page">
+        <h1>Примеры и учебные задачи</h1>
+        <p>Решение двух базовых задач из семинара: навигация через Flexbox и сетка из трёх одинаковых колонок через Grid.</p>
+        
+        <h2>✅ Задача 1 (Flexbox): навигация с равными расстояниями</h2>
+        <p>Условие: элементы списка — навигация, нужно расположить в ряд с равными промежутками. Используем <code>display: flex; justify-content: space-around;</code>.</p>
+        <div style="background:#ffffff; border-radius: 28px; padding: 1rem; border:1px solid #e9e9ef;">
+            <ul style="display: flex; justify-content: space-around; list-style: none; padding: 12px 0; background:#f8fafc; border-radius: 48px;">
+                <li><a href="#" style="text-decoration: none; font-weight: 500;">🏠 Главная</a></li>
+                <li><a href="#" style="text-decoration: none; font-weight: 500;">📰 Блог</a></li>
+                <li><a href="#" style="text-decoration: none; font-weight: 500;">📞 Контакты</a></li>
+                <li><a href="#" style="text-decoration: none; font-weight: 500;">🔧 Услуги</a></li>
+            </ul>
+        </div>
+        <pre><code>nav ul {
+  display: flex;
+  justify-content: space-around;
+}</code></pre>
+
+        <h2>✅ Задача 2 (Grid): три колонки одинаковой ширины независимо от содержимого</h2>
+        <p>Условие: элементы разного размера, но должны образовать 3 одинаковых столбца. Используем <code>grid-template-columns: repeat(3, 1fr);</code></p>
+        <div class="grid-three-equal">
+            <div>📦 Короткий текст</div>
+            <div>📦 Очень длинное содержимое, которое показывает, что ширина ячейки остаётся идеально равной благодаря системе Grid</div>
+            <div>📦 Средний текст</div>
+        </div>
+        <pre><code>.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}</code></pre>
+        <p>🔥 Обе задачи выполнены.</p>
+    </div>
+
+    <!-- ========== СТРАНИЦА "ОБ АВТОРЕ" (полное имя + e-mail) ========== -->
+    <div id="author-page" class="page">
+        <h1>Об авторе</h1>
+        <div class="author-card">
+            <div class="author-name">Шашерин Максим Александрович</div>
+            <div class="author-badge">✨ Студент группы ПМ-31 Вологодского Государственного университета✨</div>
+            <div class="author-email">📧 shasherin_00@mail.ru</div>
+            <div style="margin-top: 24px; font-size: 0.9rem;">📌 Материалы подготовлены на основе лекции "Flexbox и Grid"</div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <p>© 2025 Шашерин Максим Александрович, ПМ-31. Семинар: Flexbox и Grid системы макетирования.</p>
+        <div class="counter-box">
+            🌐 Счётчик посещений (демо-счётчик): 
+            <span id="visit-counter">загрузка...</span>
+        </div>
+        <p style="margin-top: 0.8rem; font-size: 1rem;">
+    		<a href="https://pm.vogu35.ru/" target="_blank" rel="noopener noreferrer">Сайт кафедры прикладной математики</a>
+	</p>
+    </div>
+</footer>
+
+<button class="scroll-top" id="backToTopBtn" aria-label="Наверх">⬆ Наверх</button>
+
+<script>
+    // -------- НАВИГАЦИЯ ПО СТРАНИЦАМ (SPA стиль) с поддержкой новой страницы "author" ----------
+    const pages = {
+        home: document.getElementById('home-page'),
+        flex: document.getElementById('flex-page'),
+        grid: document.getElementById('grid-page'),
+        compare: document.getElementById('compare-page'),
+        examples: document.getElementById('examples-page'),
+        author: document.getElementById('author-page')
+    };
+    const navLinks = document.querySelectorAll('[data-page]');
+
+    function activatePage(pageId) {
+        Object.values(pages).forEach(page => {
+            if (page) page.classList.remove('active-page');
+        });
+        if (pages[pageId]) pages[pageId].classList.add('active-page');
+        navLinks.forEach(link => {
+            const val = link.getAttribute('data-page');
+            if (val === pageId) link.classList.add('active');
+            else link.classList.remove('active');
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const pageId = link.getAttribute('data-page');
+            if (pageId && pages[pageId]) {
+                activatePage(pageId);
+                history.pushState(null, '', `#${pageId}`);
+            }
+        });
+    });
+
+    // обработка прямой ссылки (хэш)
+    function handleHash() {
+        const hash = window.location.hash.slice(1);
+        if (hash && pages[hash]) activatePage(hash);
+        else if (!hash || !pages[hash]) activatePage('home');
+    }
+    window.addEventListener('hashchange', handleHash);
+    handleHash();
+
+    (function visitCounter() {
+        let visits = localStorage.getItem('flexgrid_visits');
+        if (visits === null) {
+            visits = 1;
+        } else {
+            visits = Number(visits) + 1;
+        }
+        localStorage.setItem('flexgrid_visits', visits);
+        const counterSpan = document.getElementById('visit-counter');
+        if (counterSpan) counterSpan.innerText = visits;
+    })();
+
+    const topBtn = document.getElementById('backToTopBtn');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+            topBtn.classList.add('show');
+        } else {
+            topBtn.classList.remove('show');
+        }
+    });
+    topBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>
