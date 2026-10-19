@@ -58,10 +58,12 @@ topBtn.addEventListener('click', () => {
 // ===== СЧЁТЧИК ПОСЕЩЕНИЙ (localStorage) =====
 const counterEl = document.getElementById('visitCounter');
 if (counterEl) {
-    fetch('https://api.countapi.xyz/hit/shasherin-flex-grid-site/visits')
+    fetch('https://api.counterapi.dev/v1/shasherin/flex-grid/up')
         .then(response => response.json())
-        .then(data => { counterEl.textContent = data.value; })
-        .catch(() => { counterEl.textContent = '...'; });
+        .then(data => { 
+            if (data && data.count) counterEl.textContent = data.count; 
+        })
+        .catch(() => { counterEl.textContent = '1'; });
 }
 
 // ===== ИНТЕРАКТИВНАЯ ДЕМОНСТРАЦИЯ: FLEXBOX =====
