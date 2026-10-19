@@ -55,15 +55,19 @@ topBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-// ===== СЧЁТЧИК ПОСЕЩЕНИЙ (localStorage) =====
+// ===== СЧЁТЧИК ПОСЕЩЕНИЙ =====
 const counterEl = document.getElementById('visitCounter');
 if (counterEl) {
-    fetch('https://api.counterapi.dev/v1/shasherin/flex-grid/up')
+    fetch('https://api.countapi.xyz/hit/shasherin-flex-grid/visits')
         .then(response => response.json())
         .then(data => { 
-            if (data && data.count) counterEl.textContent = data.count; 
+            if (data && data.value) {
+                counterEl.textContent = data.value; 
+            }
         })
-        .catch(() => { counterEl.textContent = '1'; });
+        .catch(() => { 
+            counterEl.textContent = '0'; 
+        });
 }
 
 // ===== ИНТЕРАКТИВНАЯ ДЕМОНСТРАЦИЯ: FLEXBOX =====
